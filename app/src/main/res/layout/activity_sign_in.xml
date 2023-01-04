@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="signIn"
+            type="com.example.loginusingmvvm.signin.viewmodel.SignInViewModel" />
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".signin.activity.SignInActivity">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guidelineStart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_begin="@dimen/dimen32sp" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guidelineEnd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_end="@dimen/dimen32sp" />
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/imgBack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingVertical="@dimen/dimen16dp"
+                android:src="@drawable/ic_back_arrow"
+                app:layout_constraintStart_toEndOf="@id/guidelineStart"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/imgLogo"
+                android:layout_width="@dimen/dimen200dp"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:scaleType="fitXY"
+                android:src="@drawable/logo"
+                app:layout_constraintEnd_toStartOf="@id/guidelineEnd"
+                app:layout_constraintStart_toEndOf="@id/guidelineStart"
+                app:layout_constraintTop_toTopOf="@id/imgBack" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/txtSignInNow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tv_title_Sign_in_now"
+                android:textColor="@color/black"
+                android:textSize="@dimen/dimen26sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+                app:layout_constraintStart_toStartOf="@id/guidelineStart"
+                app:layout_constraintTop_toBottomOf="@id/imgLogo" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/txtPleaseLogin"
+                android:layout_width="@dimen/dimen0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen8dp"
+                android:gravity="center"
+                android:text="@string/tv_title_please_sign_in_to_continue_our_app"
+                android:textSize="@dimen/dimen16sp"
+                app:layout_constraintEnd_toStartOf="@id/guidelineEnd"
+                app:layout_constraintStart_toEndOf="@id/guidelineStart"
+                app:layout_constraintTop_toBottomOf="@id/txtSignInNow" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/edtEmail"
+                style="@style/EditTextStyle"
+                android:layout_width="@dimen/dimen0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen16dp"
+                android:hint="@string/edt_title_email"
+                app:layout_constraintEnd_toStartOf="@id/guidelineEnd"
+                app:layout_constraintStart_toEndOf="@id/guidelineStart"
+                app:layout_constraintTop_toBottomOf="@id/txtPleaseLogin">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editTextEmail"
+                    android:layout_width="match_parent"
+                    android:text="@={signIn.email}"
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionNext"
+                    android:inputType="textEmailAddress" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/edtPassword"
+                style="@style/EditTextStyle"
+                android:layout_width="@dimen/dimen0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/edt_title_password"
+                app:endIconMode="password_toggle"
+                app:layout_constraintEnd_toStartOf="@id/guidelineEnd"
+                app:layout_constraintStart_toEndOf="@id/guidelineStart"
+                app:layout_constraintTop_toBottomOf="@id/edtEmail">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editTextPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@={signIn.password}"
+                    android:imeOptions="actionNext"
+                    android:inputType="textPassword" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/txtForgotPassword"
+                android:layout_width="@dimen/dimen0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/tv_title_forgot_password"
+                android:textColor="@color/black"
+                android:textSize="@dimen/dimen16sp"
+                app:layout_constraintEnd_toEndOf="@id/edtPassword"
+                app:layout_constraintTop_toBottomOf="@id/edtPassword" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSignIn"
+                android:layout_width="@dimen/dimen0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen16dp"
+                android:backgroundTint="@color/black"
+                android:padding="16dp"
+                android:text="@string/btn_title_Sign_in"
+                android:textSize="@dimen/dimen16sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@id/txtDontHaveAnAccount"
+                app:layout_constraintEnd_toStartOf="@id/guidelineEnd"
+                app:layout_constraintStart_toEndOf="@id/guidelineStart"
+                app:layout_constraintTop_toBottomOf="@id/txtForgotPassword"
+                app:layout_constraintVertical_chainStyle="spread_inside" />
+
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/txtDontHaveAnAccount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen32dp"
+                android:text="@string/tv_title_don_t_have_an_account"
+                app:layout_constraintEnd_toStartOf="@id/txtSignUp"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="@id/guidelineStart"
+                app:layout_constraintTop_toBottomOf="@id/btnSignIn" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/txtSignUp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimen8dp"
+                android:text="@string/tv_title_Sign_up"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@id/txtDontHaveAnAccount"
+                app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+                app:layout_constraintStart_toEndOf="@id/txtDontHaveAnAccount"
+                app:layout_constraintTop_toTopOf="@id/txtDontHaveAnAccount" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/txtOrConnect"
+                android:layout_width="@dimen/dimen0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/tv_title_or_connect"
+                app:layout_constraintBottom_toTopOf="@id/imgTwitter"
+                android:textSize="@dimen/dimen16sp"
+                app:layout_constraintEnd_toStartOf="@id/guidelineEnd"
+                app:layout_constraintStart_toEndOf="@id/guidelineStart"
+                app:layout_constraintTop_toBottomOf="@id/txtDontHaveAnAccount" />
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/imgFaceBook"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_facebook"
+                app:layout_constraintEnd_toStartOf="@id/imgTwitter"
+                app:layout_constraintBottom_toBottomOf="@id/imgTwitter"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toEndOf="@id/guidelineStart"
+                app:layout_constraintTop_toTopOf="@id/imgTwitter" />
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/imgTwitter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/dimen8dp"
+                android:layout_marginVertical="@dimen/dimen16dp"
+                android:src="@drawable/ic_twitter"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/imgGoogle"
+                app:layout_constraintStart_toEndOf="@id/imgFaceBook"
+                app:layout_constraintTop_toBottomOf="@id/txtOrConnect" />
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/imgGoogle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@id/imgTwitter"
+                android:src="@drawable/ic_google_plus"
+                app:layout_constraintEnd_toStartOf="@id/guidelineEnd"
+                app:layout_constraintStart_toEndOf="@id/imgTwitter"
+                app:layout_constraintTop_toTopOf="@id/imgTwitter" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+</layout>

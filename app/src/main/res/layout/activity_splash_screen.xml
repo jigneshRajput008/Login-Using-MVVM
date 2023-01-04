@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".splash.activity.SplashScreenActivity">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guidelineStart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="@dimen/dimen32sp" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guidelineEnd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="@dimen/dimen32sp" />
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/imgLogo"
+            android:layout_width="@dimen/dimen200dp"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:src="@drawable/logo"
+            app:layout_constraintEnd_toStartOf="@id/guidelineEnd"
+            app:layout_constraintStart_toEndOf="@id/guidelineStart"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/imgWelcomeLogo"
+            android:layout_width="@dimen/dimen300dp"
+            android:layout_height="@dimen/dimen200dp"
+            android:layout_marginTop="@dimen/dimen16dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/welcome_logo"
+            app:layout_constraintEnd_toEndOf="@id/imgLogo"
+            app:layout_constraintStart_toStartOf="@id/imgLogo"
+            app:layout_constraintTop_toBottomOf="@id/imgLogo" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/txtWelcome"
+            android:layout_width="@dimen/dimen0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen32dp"
+            android:gravity="center"
+            android:text="@string/tv_title_welcome"
+            android:textColor="@color/black"
+            android:textSize="@dimen/dimen30sp"
+            app:layout_constraintEnd_toEndOf="@id/imgWelcomeLogo"
+            app:layout_constraintStart_toStartOf="@id/imgWelcomeLogo"
+            app:layout_constraintTop_toBottomOf="@id/imgWelcomeLogo" />
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/animation"
+            android:layout_width="@dimen/dimen150dp"
+            android:layout_height="@dimen/dimen150dp"
+            app:lottie_rawRes="@raw/loading"
+            app:lottie_autoPlay="true"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/txtWelcome"
+            app:layout_constraintStart_toStartOf="@id/txtWelcome"
+            app:layout_constraintEnd_toEndOf="@id/txtWelcome"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:lottie_loop="true"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/txtStuff"
+            android:layout_width="@dimen/dimen0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen16dp"
+            android:gravity="center"
+            android:visibility="gone"
+            android:text="@string/tv_title_create_an_account_and_access_thousand_of_cool_stuffs"
+            android:textSize="@dimen/dimen16sp"
+            app:layout_constraintEnd_toEndOf="@id/txtWelcome"
+            app:layout_constraintStart_toStartOf="@id/txtWelcome"
+            app:layout_constraintTop_toBottomOf="@id/txtWelcome" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnGettingStarted"
+            style="@style/ButtonStyle"
+            android:layout_width="@dimen/dimen0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_title_getting_started"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@id/txtAlreadyHaveAnAccount"
+            app:layout_constraintEnd_toStartOf="@id/guidelineEnd"
+            app:layout_constraintStart_toEndOf="@id/guidelineStart"
+            app:layout_constraintTop_toBottomOf="@id/txtStuff"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/txtAlreadyHaveAnAccount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen32dp"
+            android:visibility="gone"
+            android:text="@string/tv_title_already_have_an_account"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/txtSignIn"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="@id/guidelineStart"
+            app:layout_constraintTop_toBottomOf="@id/btnGettingStarted" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/txtSignIn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimen8dp"
+            android:text="@string/tv_title_Sign_in"
+            android:visibility="gone"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/txtAlreadyHaveAnAccount"
+            app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+            app:layout_constraintStart_toEndOf="@id/txtAlreadyHaveAnAccount"
+            app:layout_constraintTop_toTopOf="@id/txtAlreadyHaveAnAccount" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
