@@ -9,8 +9,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.loginusingmvvm.R
 import com.example.loginusingmvvm.network.RetrofitClient
+import com.example.loginusingmvvm.network.Service
+import com.example.loginusingmvvm.signin.model.SignInModel
+import com.example.loginusingmvvm.signin.repository.SignInRepository
 import com.example.loginusingmvvm.signup.model.SignUpModel
+import com.example.loginusingmvvm.signup.repository.SignUpRepository
 import com.example.loginusingmvvm.util.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -18,6 +25,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.File
+import kotlin.math.log
 
 
 class SignUpViewModel(application: Application) : AndroidViewModel(application) {
@@ -108,8 +116,25 @@ class SignUpViewModel(application: Application) : AndroidViewModel(application) 
             put("password", sendPassword)
         }
 
-        mutableLiveData.postValue(Resource.loading(null))
-        val retrofit = RetrofitClient.getRetrofit()
+        mutableLiveData.value = Resource.loading(null)
+        val apiInterface = RetrofitClient.getRetrofit().create(Service::class.java)
+        val signUpRepository  = SignUpRepository(apiInterface)
+
+        CoroutineScope(Dispatchers.IO).launch {
+
+            try {
+                val repository : Response<SignUpModel> = signUpRepository.senData(body,hasMap)
+                mutableLiveData.postValue(responseCodeCheck.getResponseResult(repository))
+            }catch (e:Exception){
+                Log.d("TAG", "sendDataInRetrofit: "+e.message)
+                mutableLiveData.postValue(Resource.error(e.message!!, null))
+            }
+        }
+
+
+
+      /*  mutableLiveData.postValue(Resource.loading(null))
+        val retrofit = RetrofitClient.getRetrofit().create(Service::class.java)
         retrofit!!.sendData(body, hasMap).enqueue(object : Callback<SignUpModel?> {
             override fun onResponse(call: Call<SignUpModel?>?, response: Response<SignUpModel?>?) {
                 try {
@@ -130,7 +155,7 @@ class SignUpViewModel(application: Application) : AndroidViewModel(application) 
                 Log.e("Failed", "onFailure: $t")
                 mutableLiveData.postValue(Resource.error(t!!.message!!, null))
             }
-        })
+        })*/
     }
 
 

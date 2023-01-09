@@ -1,11 +1,8 @@
 package com.example.loginusingmvvm.signup.activity
 
 import android.Manifest
-import android.annotation.SuppressLint
-import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.net.Uri
@@ -14,9 +11,11 @@ import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.example.loginusingmvvm.R
@@ -35,13 +34,15 @@ class SignUpActivity : AppCompatActivity() {
     lateinit var util: Utils
     private lateinit var progressDialog: ProgressDialog
 
-    var path: String = ""
+    private var path: String = ""
+    lateinit var pickMedia: ActivityResultLauncher<PickVisualMediaRequest>
+    lateinit var launcher: ActivityResultLauncher<String>
+    var isCamera = false
 
     companion object {
-        const val REQUEST_GALLERY = 1
-        const val REQUEST_CAMERA = 2
+        const val REQUEST_CAMERA = 1
+        const val REQUEST_GALLERY = 2
     }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,9 +58,53 @@ class SignUpActivity : AppCompatActivity() {
         util = Utils()
         progressDialog = ProgressDialog(this)
 
-
         onClick(signUpViewModel)
+        viewModelObserve()
+        pickImage()
+        checkImagePermission()
+    }
 
+    private fun checkImagePermission() {
+        launcher =
+            registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+                if (isGranted) {
+                    if (isCamera) {
+                        openCamera()
+                    } else {
+                        openGallery()
+                    }
+                } else {
+
+                    val shouldShowRequest = if (isCamera) {
+                        shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)
+                    } else {
+                        shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)
+                    }
+
+                    if (!shouldShowRequest) {
+                        if (isCamera) {
+                            util.openSettingDialog(this, getString(R.string.alertdialog_camera_permission))
+                        }else{
+                            util.openSettingDialog(this, getString(R.string.alertdialog_gallery_permission))
+                        }
+                    }
+                }
+            }
+    }
+
+    private fun pickImage() {
+        pickMedia = registerForActivityResult(PickVisualMedia()) { uri: Uri? ->
+            if (uri != null) {
+                path = PathUtil.getPath(this, uri).toString()
+                binding.btnSelectImage.text = path.substring(path.lastIndexOf("/") + 1)
+                binding.imgLogo.setImageURI(uri)
+            } else {
+                Log.e("PhotoPicker", "No media selected")
+            }
+        }
+    }
+
+    private fun viewModelObserve() {
         signUpViewModel.liveData.observe(this) {
             when (it.status) {
                 Status.SUCCESS -> {
@@ -116,8 +161,8 @@ class SignUpActivity : AppCompatActivity() {
                     ).show()
                 }
             }
-            btnSelectImage.setOnClickListener {
-                dialogBoxTwo(this@SignUpActivity, getString(R.string.dialog_title_select_image))
+            binding.btnSelectImage.setOnClickListener {
+                dialogBoxTwo()
             }
             txtSignIn.setOnClickListener {
                 startActivity(Intent(this@SignUpActivity, SignInActivity::class.java))
@@ -134,6 +179,55 @@ class SignUpActivity : AppCompatActivity() {
         }
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_CAMERA && resultCode == RESULT_OK) {
+            val pic = data?.getParcelableExtra<Bitmap>("data")
+            binding.imgLogo.setImageBitmap(pic)
+            val uri = getImageUri(pic!!)
+            path = PathUtil.getPath(this, uri!!).toString()
+            binding.btnSelectImage.text = path.substring(path.lastIndexOf("/") + 1)
+        }
+    }
+
+    private fun openGallery() {
+        pickMedia.launch(PickVisualMediaRequest(PickVisualMedia.ImageOnly))
+    }
+
+    private fun openCamera() {
+        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        startActivityIfNeeded(intent, REQUEST_CAMERA)
+    }
+
+    private fun getImageUri(inImage: Bitmap): Uri? {
+        val bytes = ByteArrayOutputStream()
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
+        val cameraPath =
+            MediaStore.Images.Media.insertImage(this.contentResolver, inImage, "Title", null)
+        return Uri.parse(cameraPath)
+    }
+
+    private fun dialogBoxTwo() {
+        MaterialAlertDialogBuilder(this)
+            .setTitle("Open")
+            .setPositiveButton("Gallery") { gallery, _ ->
+                isCamera = false
+                launcher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+            }
+            .setNegativeButton("Camera") { camera, _ ->
+                isCamera = true
+                launcher.launch(Manifest.permission.CAMERA)
+            }
+            .setNeutralButton("Dismiss") { dismiss, _ ->
+                dismiss.dismiss()
+            }
+            .setCancelable(false)
+            .create()
+            .show()
+    }
+
+
+/*
     fun checkPermission(permission: String, requestCode: Int) {
         if (ContextCompat.checkSelfPermission(
                 this@SignUpActivity, permission
@@ -148,8 +242,6 @@ class SignUpActivity : AppCompatActivity() {
             }
         }
     }
-
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK) {
@@ -168,10 +260,7 @@ class SignUpActivity : AppCompatActivity() {
             }
         }
     }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int, permissions: Array<out String>, grantResults: IntArray
-    ) {
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
         if (requestCode == REQUEST_GALLERY) {
@@ -216,7 +305,6 @@ class SignUpActivity : AppCompatActivity() {
             }
         }
     }
-
     @SuppressLint("IntentReset")
     private fun openGallery() {
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
@@ -224,12 +312,10 @@ class SignUpActivity : AppCompatActivity() {
         startActivityIfNeeded(intent, REQUEST_GALLERY)
 
     }
-
     private fun openCamera() {
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         startActivityIfNeeded(intent, REQUEST_CAMERA)
     }
-
     fun dialogBoxTwo(activity: Activity, title: String) {
         activity.apply {
             MaterialAlertDialogBuilder(activity)
@@ -249,12 +335,12 @@ class SignUpActivity : AppCompatActivity() {
                 .show()
         }
     }
-
     private fun getImageUri(inImage: Bitmap): Uri? {
         val bytes = ByteArrayOutputStream()
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
         val cameraPath = MediaStore.Images.Media.insertImage(this.contentResolver, inImage, "Title", null)
         return Uri.parse(cameraPath)
     }
+*/*/
 
 }

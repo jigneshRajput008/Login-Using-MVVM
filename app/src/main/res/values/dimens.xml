@@ -51,6 +51,7 @@
     <dimen name="dimen48dp">48dp</dimen>
     <dimen name="dimen49dp">49dp</dimen>
     <dimen name="dimen50dp">50dp</dimen>
+    <dimen name="dimen55dp">55dp</dimen>
 
     <dimen name="dimen1sp">1sp</dimen>
     <dimen name="dimen2sp">2sp</dimen>
@@ -90,5 +91,6 @@
     <dimen name="dimen350dp">350dp</dimen>
     <dimen name="dimen300dp">300dp</dimen>
     <dimen name="dimen30sp">30sp</dimen>
+    <dimen name="dimen120dp">120dp</dimen>
 
 </resources>

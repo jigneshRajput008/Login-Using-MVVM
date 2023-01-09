@@ -76,7 +76,7 @@ class Utils {
         openSettingDialogBox.setMessage(message)
         openSettingDialogBox.setPositiveButton("Settings") { _, _ ->
             val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-            intent.data = Uri.fromParts("package",BuildConfig.APPLICATION_ID , null)
+            intent.data = Uri.fromParts("package", BuildConfig.APPLICATION_ID, null)
             activity.startActivity(intent)
         }
         openSettingDialogBox.setNegativeButton("Dismiss") { deny, _ ->
