@@ -63,5 +63,6 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.14.2'
 
 //    pick Image
+//    implementation 'androidx.activity:activity:1.6.1'
     implementation 'androidx.activity:activity:1.6.1'
 }
